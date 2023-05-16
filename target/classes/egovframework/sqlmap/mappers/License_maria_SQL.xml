@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="License">
+
+	<sql id="selectLicenseList-where">
+		<if test="searchWrd != null and searchWrd != ''">
+			AND (A.EMP_NM LIKE CONCAT('%' , #{searchWrd}, '%')
+			OR  A.SW_NM LIKE CONCAT('%' , #{searchWrd}, '%'))
+		</if>
+	</sql>
+
+	<select id="selectLicenseList" parameterType="LicenseVO" resultType="egovMap">
+			SELECT
+				A.NO AS NO
+				,A.EMP_NM AS EMP_NM
+				,A.SW_NM AS SW_NM
+				,A.CELL_PHONE AS CELL_PHONE
+				,A.START_DT AS START_DT
+				,A.END_DT AS END_DT
+				,A.RNWL_CYCLE AS RNWL_CYCLE
+				,A.NOTE AS NOTE
+				,A.CREAT_DT AS CREAT_DT
+				,A.UPDATE_DT AS UPDATE_DT
+			FROM boardlist A
+			WHERE 1=1
+			<include refid="selectLicenseList-where"/>
+			LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+	</select>
+
+
+	<select id="selectLicenseListTotCnt" parameterType="LicenseVO" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM boardlist A
+		WHERE 1=1
+		<include refid="selectLicenseList-where"/>
+	</select>
+
+
+</mapper>
